@@ -12,7 +12,7 @@ public class RadioButtonDemo extends JFrame implements ActionListener {
         // Set up the JFrame
         setTitle("RadioButtonDemo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(750, 350);
+        setSize(750, 400);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -24,6 +24,7 @@ public class RadioButtonDemo extends JFrame implements ActionListener {
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBorder(BorderFactory.createTitledBorder("Select a Pet"));
+        leftPanel.setBackground(new Color(240, 240, 240));
 
         // Initialize radio buttons
         birdButton = new JRadioButton("Bird");
@@ -64,15 +65,14 @@ public class RadioButtonDemo extends JFrame implements ActionListener {
         leftPanel.add(Box.createVerticalGlue());
 
         // Create right panel for image display
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BorderLayout());
+        JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setBorder(BorderFactory.createTitledBorder("Pet Display"));
+        rightPanel.setBackground(new Color(255, 255, 255));
 
         // Create image label
         petImageLabel = new JLabel();
         petImageLabel.setHorizontalAlignment(JLabel.CENTER);
         petImageLabel.setVerticalAlignment(JLabel.CENTER);
-        petImageLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
         rightPanel.add(petImageLabel, BorderLayout.CENTER);
 
@@ -80,7 +80,6 @@ public class RadioButtonDemo extends JFrame implements ActionListener {
         mainPanel.add(leftPanel, BorderLayout.WEST);
         mainPanel.add(rightPanel, BorderLayout.CENTER);
 
-        // Add main panel to frame
         add(mainPanel);
 
         // Display initial pet (Pig)
@@ -105,14 +104,28 @@ public class RadioButtonDemo extends JFrame implements ActionListener {
     }
 
     private void displayPet(String petName) {
-        // Display a message box with the selected pet
+        // Load image from the images folder
+        String imagePath = "images/" + petName.toLowerCase() + ".png";
+        ImageIcon imageIcon = new ImageIcon(imagePath);
+
+        // Check if image exists
+        if (imageIcon.getIconWidth() == -1) {
+            petImageLabel.setIcon(null);
+            petImageLabel.setText("❌ Image not found!\nPlace " + petName.toLowerCase() + ".png in the 'images' folder");
+            petImageLabel.setForeground(Color.RED);
+        } else {
+            // Scale the image to fit the panel (300x250 pixels)
+            Image scaledImage = imageIcon.getImage().getScaledInstance(300, 250, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+            petImageLabel.setIcon(scaledIcon);
+            petImageLabel.setText(null);
+        }
+
+        // Display confirmation message
         JOptionPane.showMessageDialog(this, 
             "You selected: " + petName, 
             "Pet Selection", 
             JOptionPane.INFORMATION_MESSAGE);
-
-        // Update the image label
-        petImageLabel.setText("🐾 " + petName + " 🐾");
     }
 
     public static void main(String[] args) {
